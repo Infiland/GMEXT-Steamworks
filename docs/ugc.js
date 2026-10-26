@@ -966,28 +966,34 @@
 
 /**
  * @func steam_ugc_download
- * @desc With this function you can download a preview image for any given UGC item. The `ugc_handle` is the unique identifying value for the image (which you can get using the function ${function.steam_ugc_send_query}), and the destination filename is the name (and local path within the Steam sandbox) that you wish to give the image file when the download is complete.
+ * @desc With this function you can download a shared UGC file from Steam using its UGC handle. It works with any UGC handle, not only preview images. For example:
+ *
+ * * the `handle_preview_file` of an item, returned by ${function.steam_ugc_request_item_details} or ${function.steam_ugc_send_query}
+ * * the `ugc_handle` returned by ${function.steam_file_share}
+ * * the `ugc_handle` of a leaderboard entry, attached with ${function.steam_attach_leaderboard_ugc} (see ${struct.LeaderboardEntry})
+ *
+ * The destination filename is the name (and local path within the game's save area) that you want to give the file when the download is complete. The file is saved as-is, so it can be any type of data (an image, a replay, a level file, and so on).
  * This is an asynchronous function that will return an asynchronous ID and trigger the ${event.steam} when the task is finished.
- * 
- * @param {int64} ugc_handle The unique handle for the preview to be downloaded.
- * @param {string} dest_filename The filename to save the preview with.
- * 
+ *
+ * @param {int64} ugc_handle The UGC handle of the file to download.
+ * @param {string} dest_filename The filename to save the downloaded file as.
+ *
  * @returns {real}
- * 
+ *
  * @event steam
  * @member {real} id The asynchronous request ID
- * @member {string} event_type The string value `"ugc_create_item"`
+ * @member {string} event_type The string value `"ugc_download"`
  * @member {real} result This will either be the GML constant `ugc_result_success` or some other real number (see the [Steam docs](https://partner.steamgames.com/doc/api/steam_api) under **EResult** for more details)
- * @member {string} original_filename This key holds the original name of the image file *on the server* (a string)
- * @member {string} dest_filename This key holds the image file name you passed in (a string)
- * @member {real} ugc_handle The unique identifying value for the image
+ * @member {string} original_filename This key holds the original name of the file *on the server* (a string)
+ * @member {string} dest_filename This key holds the file name you passed in (a string)
+ * @member {int64} ugc_handle The UGC handle of the downloaded file
  * @event_end
- * 
+ *
  * @example
- * In this example we first call the function and store the async ID value in a variable:
- * 
+ * In this example we download the preview image of a UGC item. We first call the function and store the async ID value in a variable:
+ *
  * ```gml
- * steam_get = steam_ugc_download(steam_handle, "\UGC\Preview_file.png");
+ * steam_get = steam_ugc_download(preview_handle, "UGC/preview_file.png");
  * ```
  * This would then send off a file request to the Steam API, generating an async event which we would deal with as follows:
  * 

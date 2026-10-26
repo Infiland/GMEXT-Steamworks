@@ -2690,7 +2690,13 @@ The above code creates a query request and stores its handle in a local variable
 <p align="right"><a href="#top">Back To Top</a></p>
 
 <h1 id="steam_ugc_download">steam_ugc_download</h1>
-<p>With this function you can download a preview image for any given UGC item. The <code>ugc_handle</code> is the unique identifying value for the image (which you can get using the function <a href="ugc.html#steam_ugc_send_query">steam_ugc_send_query</a>), and the destination filename is the name (and local path within the Steam sandbox) that you wish to give the image file when the download is complete.
+<p>With this function you can download a shared UGC file from Steam using its UGC handle. It works with any UGC handle, not only preview images. For example:</p>
+<ul>
+<li>the <code>handle_preview_file</code> of an item, returned by <a href="ugc.html#steam_ugc_request_item_details">steam_ugc_request_item_details</a> or <a href="ugc.html#steam_ugc_send_query">steam_ugc_send_query</a></li>
+<li>the <code>ugc_handle</code> returned by <a href="cloud.html#steam_file_share">steam_file_share</a></li>
+<li>the <code>ugc_handle</code> of a leaderboard entry, attached with <a href="leaderboards.html#steam_attach_leaderboard_ugc">steam_attach_leaderboard_ugc</a> (see <a href="leaderboards.html#leaderboardentry">LeaderboardEntry</a>)</li>
+</ul>
+<p>The destination filename is the name (and local path within the game's save area) that you want to give the file when the download is complete. The file is saved as-is, so it can be any type of data (an image, a replay, a level file, and so on).
 This is an asynchronous function that will return an asynchronous ID and trigger the <a href="https://manual.gamemaker.io/monthly/en/The_Asset_Editors/Object_Properties/Async_Events/Steam.htm">Steam Async Event</a> when the task is finished.</p>
 <p>This function operates asynchronously, which means that it does not immediately return the requested result. Instead, upon completion of the task, it will trigger the <a href="https://manual.gamemaker.io/monthly/en/The_Asset_Editors/Object_Properties/Async_Events/Steam.htm">Steam Async Event</a>.</p>
 <p><br></p>
@@ -2710,12 +2716,12 @@ This is an asynchronous function that will return an asynchronous ID and trigger
 <tr>
 <td>ugc_handle</td>
 <td><a href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Overview/Data_Types.htm">Int64</a></td>
-<td>The unique handle for the preview to be downloaded.</td>
+<td>The UGC handle of the file to download.</td>
 </tr>
 <tr>
 <td>dest_filename</td>
 <td><a href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Strings/Strings.htm">String</a></td>
-<td>The filename to save the preview with.</td>
+<td>The filename to save the downloaded file as.</td>
 </tr>
 </tbody>
 </table>
@@ -2748,7 +2754,7 @@ This is an asynchronous function that will return an asynchronous ID and trigger
 <tr>
 <td>event_type</td>
 <td><a href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Strings/Strings.htm">String</a></td>
-<td>The string value <code>"ugc_create_item"</code></td>
+<td>The string value <code>"ugc_download"</code></td>
 </tr>
 <tr>
 <td>result</td>
@@ -2758,24 +2764,24 @@ This is an asynchronous function that will return an asynchronous ID and trigger
 <tr>
 <td>original_filename</td>
 <td><a href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Strings/Strings.htm">String</a></td>
-<td>This key holds the original name of the image file <em>on the server</em> (a string)</td>
+<td>This key holds the original name of the file <em>on the server</em> (a string)</td>
 </tr>
 <tr>
 <td>dest_filename</td>
 <td><a href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Strings/Strings.htm">String</a></td>
-<td>This key holds the image file name you passed in (a string)</td>
+<td>This key holds the file name you passed in (a string)</td>
 </tr>
 <tr>
 <td>ugc_handle</td>
-<td><a href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Overview/Data_Types.htm">Real</a></td>
-<td>The unique identifying value for the image</td>
+<td><a href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Overview/Data_Types.htm">Int64</a></td>
+<td>The UGC handle of the downloaded file</td>
 </tr>
 </tbody>
 </table>
 <p><br></p>
 <p><strong>Example:</strong></p>
-<p>In this example we first call the function and store the async ID value in a variable:</p>
-<p><pre class="highlight"><code class="language-gml">steam_get = steam_ugc_download(steam_handle, "\UGC\Preview_file.png");</code></pre>
+<p>In this example we download the preview image of a UGC item. We first call the function and store the async ID value in a variable:</p>
+<p><pre class="highlight"><code class="language-gml">steam_get = steam_ugc_download(preview_handle, "UGC/preview_file.png");</code></pre>
 This would then send off a file request to the Steam API, generating an async event which we would deal with as follows:</p>
 <p><pre class="highlight"><code class="language-gml">var _event_id = async_load[? "id"];
 if (_event_id == steam_get)
