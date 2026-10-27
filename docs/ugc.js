@@ -973,6 +973,9 @@
  * * the `ugc_handle` of a leaderboard entry, attached with ${function.steam_attach_leaderboard_ugc} (see ${struct.LeaderboardEntry})
  *
  * The destination filename is the name (and local path within the game's save area) that you want to give the file when the download is complete. The file is saved as-is, so it can be any type of data (an image, a replay, a level file, and so on).
+ *
+ * [[NOTE: The destination filename must be a path relative to the game's save area, such as `"Content/replay.dat"`. The extension adds the save area path itself, so an absolute path (for example one built with `game_save_id`) points to an invalid location and the download fails with a `result` of 37 (`k_EResultIOFailure`).]]
+ *
  * This is an asynchronous function that will return an asynchronous ID and trigger the ${event.steam} when the task is finished.
  *
  * @param {int64} ugc_handle The UGC handle of the file to download.
