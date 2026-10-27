@@ -12,6 +12,7 @@ public:
 	};
 	STEAM_CALLBACK(steam_net_callbacks_t, p2p_session_request, P2PSessionRequest_t);
 	//STEAM_CALLBACK(steam_net_callbacks_t, OnPersonaStateChange, PersonaStateChange_t);
+	STEAM_CALLBACK(steam_net_callbacks_t, lobby_data_update, LobbyDataUpdate_t);
 	STEAM_CALLBACK(steam_net_callbacks_t, lobby_chat_update, LobbyChatUpdate_t);
 	STEAM_CALLBACK(steam_net_callbacks_t, lobby_chat_message, LobbyChatMsg_t);
 	STEAM_CALLBACK(steam_net_callbacks_t, lobby_join_requested, GameLobbyJoinRequested_t);
@@ -20,6 +21,7 @@ public:
 	STEAM_CALLBACK(steam_net_callbacks_t, steam_inventory_full_update, SteamInventoryFullUpdate_t);
 	STEAM_CALLBACK(steam_net_callbacks_t, steam_inventory_definition_update, SteamInventoryDefinitionUpdate_t);
 	STEAM_CALLBACK(steam_net_callbacks_t, avatar_image_loaded, AvatarImageLoaded_t);
+	STEAM_CALLBACK(steam_net_callbacks_t, validate_auth_ticket_response, ValidateAuthTicketResponse_t);
 	STEAM_CALLBACK(steam_net_callbacks_t, steam_music_volume_has_changed, VolumeHasChanged_t);
 	STEAM_CALLBACK(steam_net_callbacks_t, steam_music_playback_status_has_changed, PlaybackStatusHasChanged_t);
 
@@ -32,5 +34,14 @@ public:
 
 	void item_deleted(DeleteItemResult_t* r, bool failed);
 	void encrypted_app_ticket_response_received(EncryptedAppTicketResponse_t* pEncryptedAppTicketResponse, bool bIOFailure);
+
+	// Parties (ISteamParties)
+	STEAM_CALLBACK(steam_net_callbacks_t, parties_reservation_notification,          ReservationNotificationCallback_t);
+	STEAM_CALLBACK(steam_net_callbacks_t, parties_available_beacon_locations_updated, AvailableBeaconLocationsUpdated_t);
+	STEAM_CALLBACK(steam_net_callbacks_t, parties_active_beacons_updated,            ActiveBeaconsUpdated_t);
+
+	void parties_create_beacon(CreateBeaconCallback_t* e, bool failed);
+	void parties_change_num_open_slots(ChangeNumOpenSlotsCallback_t* e, bool failed);
+	void parties_join_party(JoinPartyCallback_t* e, bool failed);
 };
 extern steam_net_callbacks_t steam_net_callbacks;
